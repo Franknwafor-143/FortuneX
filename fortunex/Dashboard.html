@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FortuneX - Dashboard</title>
+    <link rel="shortcut icon" href="images/f2.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* Original Dashboard Variables */
+            --primary: #8b0000; 
+            --secondary: #ff2e2e;
+            --accent: #f2ea97; 
+            --light: #ffffff;
+            --dark: #1a1a1a;
+            --text: #ffffff;
+            --text-light: #f2f2f2;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --section-bg: rgba(139, 0, 0, 0.3);
+            --gradient-1: linear-gradient(135deg, #8b0000, #ff2e2e);
+            --gradient-2: linear-gradient(135deg, #ff2e2e, #f2ea97);
+            --sidebar-width: 260px;
+            --header-height: 70px;
+
+
+            --card-purple: var(--card-bg); 
+            --accent-orange: var(--accent); 
+            --text-secondary: var(--text-light); 
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Satoshi', sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Layout Structure */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            padding-top: var(--header-height);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .sidebar-logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .sidebar-logo span {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            color: var(--accent);
+            background: rgba(242, 234, 151, 0.1);
+            border-left-color: var(--accent);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-user {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .user-info-mini {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar-mini {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        
+        .user-details-mini h4 {
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+        
+        .user-details-mini p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 20px;
+            padding-top: calc(var(--header-height) + 20px);
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header-title h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .header-title p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            margin-right: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .notification-btn:hover {
+            background: rgba(242, 234, 151, 0.2);
+        }
+        
+        .notification-btn i {
+            font-size: 1.1rem;
+        }
+        
+        .notification-btn .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+        /* Account Status Section */
+        .account-status-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .account-status-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-1);
+        }
+        
+        .account-status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .account-status-header h2 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+        }
+        
+        .account-status-header h2 i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .status-inactive {
+            background: rgba(255, 46, 46, 0.2);
+            color: var(--secondary);
+        }
+        
+        .status-active {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+        
+        .account-status-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .account-status-info p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            max-width: 70%;
+        }
+        
+        .account-status-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        /* Account Activation Section */
+        .account-activation-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .account-activation-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-2);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-header h2 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-header h2 i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+        
+        .activation-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .activation-details {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .activation-details h3 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .activation-details h3 i {
+            margin-right: 10px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .detail-label {
+            color: var(--text-light);
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .payment-info {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .payment-info.hidden {
+            display: none;
+        }
+        
+        .payment-info h3 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .payment-info h3 i {
+            margin-right: 10px;
+        }
+        
+        .payment-account {
+            background: rgba(242, 234, 151, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px dashed rgba(242, 234, 151, 0.3);
+        }
+        
+        .payment-account-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .payment-account-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .copy-icon {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--light);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px; 
+        }
+        
+        .copy-icon:hover {
+            background: rgba(242, 234, 151, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .copy-icon.copied {
+            background: rgba(46, 204, 113, 0.3);
+        }
+        
+        .payment-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .payment-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-btn.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+        
+        .payment-btn.telegram {
+            background: #0088CC;
+            color: white;
+        }
+        
+        .payment-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Features Section */
+        .features-section {
+            margin-bottom: 30px;
+        }
+        
+        .features-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .features-header h2 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-header h2 i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-card.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .feature-card.disabled::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .feature-icon.primary {
+            background: var(--gradient-1);
+        }
+        
+        .feature-icon.secondary {
+            background: var(--gradient-2);
+            color: var(--primary);
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .feature-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--accent);
+        }
+        
+        .feature-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+        
+        /* Recent Activity Section */
+        .recent-activity-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .recent-activity-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-1);
+        }
+        
+        .activity-list {
+            list-style: none;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(242, 234, 151, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-content h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .activity-content p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .activity-time {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex; 
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-decoration: none;
+            gap: 8px; 
+        }
+        
+        .btn-primary {
+            background: var(--gradient-1);
+            color: var(--light);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--card-bg);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .modal-header h2 i {
+            margin-right: 12px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .timer-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .timer-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .timer {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .timer.warning {
+            color: var(--secondary);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            color: var(--light);
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .activation-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%); 
+            }
+            
+            .sidebar.active {
+                transform: translateX(0); 
+            }
+            
+            .main-content {
+                margin-left: 0; 
+            }
+            
+            .mobile-menu-toggle {
+                display: flex; 
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-actions {
+                flex-direction: column;
+            }
+            
+            .account-status-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .account-status-actions {
+                margin-top: 20px;
+                width: 100%;
+            }
+            
+            .account-status-actions .btn {
+                flex: 1;
+            }
+            
+            .modal {
+                width: 95%;
+            }
+        }
+        
+        /*  SOCIAL PROOF NOTIFICATION STYLES  */
+        #socialProofNotification {
+            position: fixed;
+            top: 100px; 
+            left: 20px;
+            background-color: var(--card-purple); /* Using mapped variable */
+            border-radius: 8px;
+            padding: 12px 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            z-index: 1500;
+            border-left: 4px solid var(--accent-orange); 
+            font-size: 0.9rem;
+            line-height: 1.4;
+            max-width: 250px; 
+            color: var(--text-light); 
+        }
+        #socialProofNotification.show { 
+            opacity: 1; transform: 
+            translateX(0) scale(1);
+            visibility: visible; 
+        }
+        #socialProofNotification.hide { 
+            opacity: 0;
+            transform: translateX(-100%) scale(0.9);
+        }
+        .social-name { 
+            font-weight: 700;
+            color: var(--accent-orange);
+        } 
+        .social-plan { 
+            font-weight: 600;
+            color: var(--text-secondary); 
+        } 
+        .social-time {
+            font-size: 0.8em;
+            color: #888;
+            display: block;
+            margin-top: 3px;
+        }
+        
+        /* --- Copy Notification Styles --- */
+        #copy-notification { 
+            position: fixed; bottom: 2rem; left: 50%; 
+            transform: translateX(-50%); 
+            background-color: rgba(0, 0, 0, 0.8); /* Changed to use rgba for transparency */
+            color: var(--light); 
+            padding: 0.75rem 1.5rem; 
+            border-radius: 2rem; 
+            font-size: 0.9rem; 
+            font-weight: 500; 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: opacity 0.3s ease, visibility 0.3s ease; 
+            z-index: 2000; 
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); 
+        }
+        #copy-notification.show { 
+            opacity: 1; 
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            #socialProofNotification {
+                top: 80px;
+                left: 10px;
+                max-width: calc(100% - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="images/f2.png" style="display:none;" alt="Placeholder"> 
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="images/f2.png" alt="FortuneX Logo"> 
+            </div>
+            
+            <div class="sidebar-menu">
+                <ul>
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-chart-line"></i> Earnings</a></li>
+                    <li><a href="#"><i class="fas fa-graduation-cap"></i> Courses</a></li>
+                    <li><a href="#"><i class="fas fa-gem"></i> Digital Assets</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Network</a></li>
+                    <li><a href="#"><i class="fas fa-wallet"></i> Wallet</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-info-mini">
+                    <div class="user-avatar-mini">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details-mini">
+                        <h4 id="sidebarUserName">User Name</h4>
+                        <p id="sidebarUserEmail">user@example.com</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-title">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back to your FortuneX account</p>
+                </div>
+                <div class="header-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Account Status Section -->
+            <section class="account-status-section">
+                <div class="account-status-header">
+                    <h2><i class="fas fa-user-circle"></i> Account Status</h2>
+                    <span class="status-badge status-inactive" id="statusBadge">Inactive</span>
+                </div>
+                
+                <div class="account-status-content">
+                    <div class="account-status-info">
+                        <p>Your account is currently <span id="statusText">inactive</span>. Activate your account to unlock all features and start your journey with FortuneX.</p>
+                    </div>
+
+                    <div class="account-status-actions">
+                        <button class="btn btn-primary" id="activateAccountBtn">Click here to activate your account <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Account Activation Section (Visible only if Inactive) -->
+            <section class="account-activation-section" id="activationSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-key"></i> Account Activation</h2>
+                </div>
+                
+                <div class="activation-content">
+                    <div class="activation-details">
+                        <h3><i class="fas fa-box"></i> Your Package Details</h3>
+                        <div class="detail-row">
+                            <span class="detail-label">Package Name:</span>
+                            <span class="detail-value" id="packageDetail">Inactive</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Package Price:</span>
+                            <span class="detail-value" id="priceDetail">Inactive</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Payment Status:</span>
+                            <span class="detail-value" id="paymentStatusDetail">Pending</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Registration Date:</span>
+                            <span class="detail-value" id="regDateDetail">Today</span>
+                        </div>
+                    </div>
+                    <div class="account-status-actions">
+                        <button class="btn btn-primary" id="claimRewardBtn">Claim instant ₦12,000 reward here <i class="fas fa-gift"></i></button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Features Section -->
+            <section class="features-section">
+                <div class="features-header">
+                    <h2><i class="fas fa-th-large"></i> Your Features</h2>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card disabled" id="featureEarnings">
+                        <div class="feature-icon primary">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="feature-title">Earnings</h3>
+                        <div class="feature-value">₦0.00</div>
+                        <p class="feature-description">Track your earnings and rewards</p>
+                    </div>
+                    
+                    <div class="feature-card disabled" id="featureCourses">
+                        <div class="feature-icon secondary">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="feature-title">Courses</h3>
+                        <div class="feature-value">0</div>
+                        <p class="feature-description">Access digital skill courses</p>
+                    </div>
+                    
+                    <div class="feature-card disabled" id="featureAssets">
+                        <div class="feature-icon primary">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <h3 class="feature-title">Digital Assets</h3>
+                        <div class="feature-value">0</div>
+                        <p class="feature-description">Manage your digital portfolio</p>
+                    </div>
+                    
+                    <div class="feature-card disabled" id="featureNetwork">
+                        <div class="feature-icon secondary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="feature-title">Network</h3>
+                        <div class="feature-value">0</div>
+                        <p class="feature-description">Connect with global brands</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Recent Activity Section -->
+            <section class="recent-activity-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Recent Activity</h2>
+                </div>
+                
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Account Registration</h4>
+                            <p>You successfully registered for FortuneX</p>
+                        </div>
+                        <div class="activity-time">Today</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Package Selection</h4>
+                            <p>You selected the PLUS Package</p>
+                        </div>
+                        <div class="activity-time">Today</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Account Activation Pending</h4>
+                            <p>Complete your payment to activate your account</p>
+                        </div>
+                        <div class="activity-time">Today</div>
+                    </li>
+                </ul>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!--  PAYMENT DETAILS MODAL -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-credit-card"></i> Payment Information</h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="timer-container">
+                    <div class="timer-label">Time remaining to complete payment:</div>
+                    <div class="timer" id="paymentTimer">10:00</div>
+                </div>
+                
+                <div class="payment-account">
+                    <div class="payment-account-row">
+                        <span class="detail-label">Bank Name:</span>
+                        <span class="detail-value" id="modalBankName">Loading...</span>
+                    </div>
+                    <div class="payment-account-row">
+                        <span class="detail-label">Account Name:</span>
+                        <span class="detail-value" id="modalAccName">Loading...</span>
+                    </div>
+                    <div class="payment-account-row">
+                        <span class="detail-label">Account Number:</span>
+                        <div style="display: flex; align-items: center;">
+                            <span class="detail-value" id="modalAccNumber">Loading...</span>
+                            <div class="copy-icon" id="modalCopyAccNumber" title="Copy Account Number">
+                                <i class="fas fa-copy"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-actions"> 
+                    <a href="#" class="payment-btn whatsapp" id="modalWhatsappBtn" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Send Proof via WhatsApp
+                    </a>
+                    <a href="#" class="payment-btn telegram" id="modalTelegramBtn" target="_blank">
+                        <i class="fab fa-telegram-plane"></i> Send Proof via Telegram
+                    </a>
+                </div>
+                 <p style="font-size: 0.85rem; color: var(--text-light); opacity: 0.7; margin-top: 20px; text-align: center;">
+                    Please make your payment to the account above and send proof of payment to us via WhatsApp or Telegram within the given time.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!--  NEW ACTIVATION PROMPT MODAL -->
+    <div class="modal-overlay" id="activationPromptModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> Complete Account Activation</h2>
+                <button class="modal-close" id="promptModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p style="font-size: 1.1rem; margin-bottom: 25px;">You're almost there! Complete your account activation by making the payment for your selected plan.</p>
+
+                <a href="payment.html" class="btn btn-primary" style="padding: 15px 30px;">Proceed to Payment Details <i class="fas fa-credit-card"></i></a> 
+            </div>
+        </div>
+    </div>
+    
+    <!-- Copy Notification -->
+    <div id="copy-notification">Account Number Copied!</div>
+    
+    <!-- Social Proof Notification -->
+    <div id="socialProofNotification"></div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // --- SOCIAL PROOF LOGIC ---
+    const socialProofEl = document.getElementById('socialProofNotification');
+    
+    // Data for Social Proof Notifications
+    function generateSocialProofData(count = 50) {
+        const starterAmount = "₦14,500";
+        const plusAmount = "₦14,500";
+        const starterPlan = "FORTUNEX PLUS";
+        const plusPlan = "FORTUNEX PLUS"; 
+        
+        const regionalData = {
+            igbo: {
+                names: ["Chukwudi", "Blessing", "Nneka", "Ify", "Fidelis", "Precious", "Emeka", "Uche", "Chiamaka", "Obi", "Chinedu", "Samuel"],
+                cities: ["Enugu", "Onitsha", "Owerri", "Awka", "Aba", "Port Harcourt"]
+            },
+            yoruba: {
+                names: ["Tunde", "Ade", "Gbenga", "Femi", "Kemi", "Segun", "Wale", "Bisi", "Olu", "Ayoola", "Michael", "Samuel", "Bright", "Samson", "Sodiq", "Quadri", "Jumoke", "Blessing"],
+                cities: ["Lagos", "Ibadan", "Abeokuta", "Akure", "Ogun", "Osogbo"]
+            },
+            north: {
+                names: ["Musa", "Aisha", "Ibrahim", "Hassan", "Fatima", "Usman", "Abdullahi", "Hajara", "Jibril", "Yahya"],
+                cities: ["Abuja", "Kano", "Kaduna", "Maiduguri", "Jos", "Zaria"]
+            }
+        };
+
+        const allRegions = Object.keys(regionalData);
+        const sampleMinutesAgo = [
+            "1 min ago", "2 mins ago", "3 mins ago", "5 mins ago", "8 mins ago", "10 mins ago", "15 mins ago", "just now"
+        ];
+
+        let messages = [];
+        
+        for (let i = 0; i < count; i++) {
+            const regionKey = allRegions[Math.floor(Math.random() * allRegions.length)];
+            const region = regionalData[regionKey];
+            
+            const randomName = region.names[Math.floor(Math.random() * region.names.length)];
+            const randomCity = region.cities[Math.floor(Math.random() * region.cities.length)];
+            const randomTime = sampleMinutesAgo[Math.floor(Math.random() * sampleMinutesAgo.length)];
+            
+            const isStarter = Math.random() < 0.5;
+            
+            const data = {
+                user: randomName,
+                city: randomCity,
+                plan: isStarter ? starterPlan : plusPlan,
+                amount: isStarter ? starterAmount : plusAmount,
+                time: randomTime
+            };
+            messages.push(data);
+        }
+        return messages;
+    }
+
+    let socialProofMessages = generateSocialProofData(50);
+    let activeTimeout;
+
+    function showNextNotification() {
+        if (!socialProofEl) return; // Exit if element doesn't exist
+
+        if (socialProofMessages.length === 0) {
+            socialProofMessages = generateSocialProofData(50); 
+        }
+
+        const randomIndex = Math.floor(Math.random() * socialProofMessages.length);
+        const data = socialProofMessages.splice(randomIndex, 1)[0]; 
+        const html = `<span class="social-name">${data.user}</span> from ${data.city} just subscribed to <br> <span class="social-plan">${data.plan}</span> - ${data.amount} <span class="social-time">• ${data.time}</span>`;
+        
+        socialProofEl.innerHTML = html;
+        
+        // Hide previous, then show new
+        socialProofEl.classList.remove('show');
+        socialProofEl.classList.add('hide');
+        
+        clearTimeout(activeTimeout); 
+
+        setTimeout(() => {
+            socialProofEl.classList.remove('hide');
+            socialProofEl.classList.add('show');
+        }, 50); 
+
+        // Keep the notification alive for a random duration between 5 and 10 seconds
+        const nextInterval = 5000 + Math.random() * 5000; 
+        activeTimeout = setTimeout(showNextNotification, nextInterval);
+    }
+    
+    // Start the notification loop if the element exists
+    if (socialProofEl) {
+        showNextNotification();
+    }
+
+
+    /* ==================== MOCK DATA & STATUS MANAGEMENT ==================== */
+    const USER_DATA = {
+        fullName: "fx",
+        email: "fx@gmail.com",
+        package: "Basic Pack", // Default package for display
+        price: "₦7,500",      // Default price for display
+        phone: "08012345678",
+        regDate: new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })
+    };
+
+    const DEFAULT_PACKAGE_DISPLAY = {
+        package: "Inactive",
+        price: "Inactive"
+    }
+
+    // Initialize user data and account status
+    let userData = JSON.parse(localStorage.getItem('fortuneXUser')) || USER_DATA;
+    let isAccountActive = localStorage.getItem('accountActive') === 'true';
+
+    function updateDashboardUI() {
+        const packageDataDisplay = isAccountActive ? userData : DEFAULT_PACKAGE_DISPLAY;
+        
+        // Sidebar User Info
+        if (document.getElementById('sidebarUserName')) document.getElementById('sidebarUserName').textContent = userData.fullName;
+        if (document.getElementById('sidebarUserEmail')) document.getElementById('sidebarUserEmail').textContent = userData.email;
+        
+        // Account Status Section
+        const statusBadge = document.getElementById('statusBadge');
+        const statusText = document.getElementById('statusText');
+        const activateAccountBtn = document.getElementById('activateAccountBtn');
+        const activationSection = document.getElementById('activationSection');
+        const paymentStatusDetail = document.getElementById('paymentStatusDetail');
+        
+        if (isAccountActive) {
+            if (statusBadge) {
+                statusBadge.textContent = 'Active';
+                statusBadge.classList.replace('status-inactive', 'status-active');
+            }
+            if (statusText) statusText.textContent = 'active';
+            if (activateAccountBtn) activateAccountBtn.style.display = 'none'; // Hide activation button
+            if (activationSection) activationSection.style.display = 'none'; // Hide activation section
+            if (paymentStatusDetail) paymentStatusDetail.textContent = 'Completed';
+        } else {
+            if (statusBadge) {
+                statusBadge.textContent = 'Inactive';
+                statusBadge.classList.replace('status-active', 'status-inactive');
+            }
+            if (statusText) statusText.textContent = 'inactive';
+            if (activateAccountBtn) activateAccountBtn.style.display = 'flex'; // Show activation button
+            if (activationSection) activationSection.style.display = 'block'; // Show activation section
+            if (paymentStatusDetail) paymentStatusDetail.textContent = 'Pending';
+        }
+
+        // Account Activation Details Panel
+        if (document.getElementById('packageDetail')) document.getElementById('packageDetail').textContent = packageDataDisplay.package;
+        if (document.getElementById('priceDetail')) document.getElementById('priceDetail').textContent = packageDataDisplay.price;
+        if (document.getElementById('regDateDetail')) document.getElementById('regDateDetail').textContent = userData.regDate;
+        
+        // Feature Cards (Disabled if inactive)
+        const featureCards = [
+            { id: 'featureEarnings', value: isAccountActive ? '₦5,000.00' : '₦0.00' },
+            { id: 'featureCourses', value: isAccountActive ? '3/10' : '0' },
+            { id: 'featureAssets', value: isAccountActive ? '1' : '0' },
+            { id: 'featureNetwork', value: isAccountActive ? '12' : '0' },
+        ];
+
+        featureCards.forEach(item => {
+            const card = document.getElementById(item.id);
+            const valueEl = card ? card.querySelector('.feature-value') : null;
+            if (card && valueEl) {
+                if (isAccountActive) {
+                    card.classList.remove('disabled');
+                    valueEl.textContent = item.value;
+                } else {
+                    card.classList.add('disabled');
+                    valueEl.textContent = item.value; 
+                }
+            }
+        });
+    }
+
+    updateDashboardUI(); // Initialize UI based on local storage status
+
+
+    /* ==================== PAYMENT CONFIG & MODAL SETUP ==================== */
+    const PAYMENT_CONFIG = {
+        bankName: "UBA",
+        accountName: "NWAFOR FRANK",
+        accountNumber: "23g7933151",
+        whatsappNumber: "2348057138184", 
+        telegramUsername: "fortuneX"
+    };
+
+    // Store selected plan details for the modals
+    let currentSelectedPlan = {
+        name: userData.package || "Basic Pack",
+        price: userData.price || "₦7,500"
+    };
+
+    // Modal Elements
+    const activationPromptModal = document.getElementById('activationPromptModal');
+    const promptModalClose = document.getElementById('promptModalClose');
+    const promptModalPlan = document.getElementById('promptModalPlan');
+    const promptModalPrice = document.getElementById('promptModalPrice');
+    const proceedToPaymentBtn = document.getElementById('proceedToPaymentBtn');
+
+    const paymentModal = document.getElementById('paymentModal');
+    const modalClose = document.getElementById('modalClose');
+    const paymentTimer = document.getElementById('paymentTimer');
+    const modalBankName = document.getElementById('modalBankName');
+    const modalAccName = document.getElementById('modalAccName');
+    const modalAccNumber = document.getElementById('modalAccNumber');
+    const modalWhatsappBtn = document.getElementById('modalWhatsappBtn');
+    const modalTelegramBtn = document.getElementById('modalTelegramBtn');
+
+
+    // Fill payment details into the payment modal
+    if (modalBankName) modalBankName.textContent = PAYMENT_CONFIG.bankName;
+    if (modalAccName) modalAccName.textContent = PAYMENT_CONFIG.accountName;
+    if (modalAccNumber) modalAccNumber.textContent = PAYMENT_CONFIG.accountNumber;
+
+    // --- Dynamic Modal Button Logic ---
+    const activateAccountBtn = document.getElementById('activateAccountBtn'); // Top "Click here to activate"
+    const claimRewardBtn = document.getElementById('claimRewardBtn');     // Bottom "Claim instant reward"
+
+    //  both buttons to open the activation prompt modal
+    if (activateAccountBtn) {
+        activateAccountBtn.addEventListener('click', () => {
+            if (!isAccountActive) { 
+                currentSelectedPlan = { name: userData.package, price: userData.price }; // Use user's current package
+                if (promptModalPlan) promptModalPlan.textContent = currentSelectedPlan.name;
+                if (promptModalPrice) promptModalPrice.textContent = currentSelectedPlan.price;
+                
+                activationPromptModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; 
+            }
+        });
+    }
+
+    if (claimRewardBtn) {
+        claimRewardBtn.addEventListener('click', () => {
+            if (!isAccountActive) { 
+                currentSelectedPlan = { name: userData.package, price: userData.price }; // Use user's current package
+                if (promptModalPlan) promptModalPlan.textContent = currentSelectedPlan.name;
+                if (promptModalPrice) promptModalPrice.textContent = currentSelectedPlan.price;
+
+                activationPromptModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; 
+            }
+        });
+    }
+
+    // --- Close Activation  Modal ---
+    if (promptModalClose) {
+        promptModalClose.addEventListener('click', () => {
+            activationPromptModal.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore body scroll
+        });
+    }
+    if (activationPromptModal) {
+        activationPromptModal.addEventListener('click', (e) => {
+            if (e.target === activationPromptModal) {
+                activationPromptModal.classList.remove('active');
+                document.body.style.overflow = 'auto'; 
+            }
+        });
+    }
+
+    // --- Proceed to Payment from Prompt Modal ---
+    if (proceedToPaymentBtn) {
+        proceedToPaymentBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            activationPromptModal.classList.remove('active');
+            paymentModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+            startTimer();
+            if (modalWhatsappBtn) modalWhatsappBtn.href = `https://wa.me/${PAYMENT_CONFIG.whatsappNumber}?text=Hello, I need assistance with my FortuneX activation. My plan is ${currentSelectedPlan.name}, amount: ${currentSelectedPlan.price}.`;
+            if (modalTelegramBtn) modalTelegramBtn.href = `https://t.me/${PAYMENT_CONFIG.telegramUsername}?text=Hello, I need assistance with my FortuneX activation. My plan is ${currentSelectedPlan.name}, amount: ${currentSelectedPlan.price}.`;
+        });
+    }
+
+    /* ==================== PAYMENT MODAL TIMER ==================== */
+    let timerInterval;
+    let timeRemaining = 600; // 10 minutes
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timeRemaining = 600;
+        updateTimerDisplay();
+
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+            updateTimerDisplay();
+
+            if (paymentTimer) {
+                if (timeRemaining <= 120) paymentTimer.classList.add('warning');
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    paymentTimer.textContent = "Time's up!";
+                    paymentTimer.classList.add('warning');
+                    // Automatically close modal after showing timeout message
+                    setTimeout(() => {
+                        paymentModal.classList.remove('active');
+                        document.body.style.overflow = 'auto'; // Restore body scroll
+                    }, 3000);
+                }
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        if (paymentTimer) {
+            const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            const s = (timeRemaining % 60).toString().padStart(2, '0');
+            paymentTimer.textContent = `${m}:${s}`;
+        }
+    }
+
+    // --- Close Payment Modal ---
+    if (modalClose) {
+        modalClose.addEventListener('click', () => {
+            paymentModal.classList.remove('active');
+            clearInterval(timerInterval);
+            document.body.style.overflow = 'auto'; // Restore body scroll
+        });
+    }
+    if (paymentModal) {
+        paymentModal.addEventListener('click', (e) => {
+            if (e.target === paymentModal) {
+                paymentModal.classList.remove('active');
+                clearInterval(timerInterval);
+                document.body.style.overflow = 'auto'; // Restore body scroll
+            }
+        });
+    }
+
+    /* ==================== COPY ACCOUNT NUMBER ==================== */
+    function setupCopyToClipboard(buttonId, valueElementId) {
+        const btn = document.getElementById(buttonId);
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            const text = document.getElementById(valueElementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.classList.add('copied');
+                const icon = btn.querySelector('i');
+                icon.classList.replace('fa-copy', 'fa-check');
+                const copyNotification = document.getElementById('copy-notification');
+                if(copyNotification) {
+                    copyNotification.classList.add('show');
+                }
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    icon.classList.replace('fa-check', 'fa-copy');
+                    if(copyNotification) {
+                        copyNotification.classList.remove('show');
+                    }
+                }, 2000);
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+                // Optionally show an error notification
+            });
+        });
+    }
+    setupCopyToClipboard('modalCopyAccNumber', 'modalAccNumber');
+
+    /* ==================== SIDEBAR TOGGLE ==================== */
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('sidebar');
+    if (mobileMenuToggle && sidebar) {
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // Close sidebar on link click (for mobile)
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) { // Check if icon exists
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
+                    }
+                }
+            });
+        });
+    }
+    
+    // Initial check for mobile to ensure sidebar is hidden by default if media query applies
+    function checkSidebarState() {
+        if (window.innerWidth <= 768) {
+            if (sidebar) sidebar.classList.remove('active');
+            if (mobileMenuToggle) {
+                const icon = mobileMenuToggle.querySelector('i');
+                if (icon) icon.classList.replace('fa-times', 'fa-bars');
+            }
+        }
+    }
+    window.addEventListener('resize', checkSidebarState);
+    checkSidebarState(); // Run on load
+});
+</script>
+
+
+</body></html>
